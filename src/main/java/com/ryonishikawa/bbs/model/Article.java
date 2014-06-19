@@ -39,14 +39,19 @@ public class Article {
 	}
 
 	private void printAll(EntityManager em) {
-		Query query = em.createQuery("SELECT a FROM ArticleSchema a");
+		// Query query = em.createQuery("SELECT a FROM ArticleSchema a");
+		Query query = em
+				.createQuery("SELECT a FROM ArticleSchema a JOIN FETCH a.comments c WHERE c.posted_at BETWEEN '2014-05-01' AND '2014-05-05'");
 		List<ArticleSchema> list = query.getResultList();
 		System.out.println("全件抽出：" + list.size() + "件");
 		for (int i = 0; i < list.size(); i++) {
 			ArticleSchema article = list.get(i);
 			System.out.println((i + 1) + "件目：");
 			System.out.println(article.getTitle());
-			System.out.println(article.getBody());
+			for (CommentSchema comment : article.getComments()) {
+				System.out.println(comment);
+				System.out.println(comment.getPosted_at());
+			}
 		}
 		System.out.println("-----");
 	}
